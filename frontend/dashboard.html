@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - NHÓM 1 HR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Outfit:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link rel="stylesheet" href="style.css">
+  <link rel="prefetch" href="index.html">
+  <link rel="prefetch" href="login.html">
+</head>
+<body>
+
+<div id="dashboardPage" class="page active">
+  <nav class="navbar">
+    <div class="nav-brand">
+      <a href="index.html" style="text-decoration:none; display:flex; align-items:center; gap:10px; color:inherit;">
+        <div class="robot-logo" id="dashNavRobot"></div>
+        <div class="nav-brand-text">
+          <div class="nav-brand-name">NHÓM 1 HR</div>
+          <div class="nav-brand-sub" id="dashRoleSub">DASHBOARD</div>
+        </div>
+      </a>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Trang Chủ</a></li>
+      <li><a class="active-nav" href="dashboard.html">Dashboard</a></li>
+    </ul>
+    <div class="nav-right">
+      <div class="user-chip">
+        <div class="u-dot"></div>
+        <div>
+          <div class="u-name" id="dashUserName">—</div>
+          <div class="u-role" id="dashUserRole">—</div>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">Thoát</button>
+    </div>
+    <div class="hamburger" onclick="toggleSidebar()"><span></span><span></span><span></span></div>
+  </nav>
+
+  <div class="dash-layout">
+    <aside class="sidebar" id="mainSidebar">
+      <div id="sidebarContent"></div>
+    </aside>
+    <main class="main-area">
+      <!-- Section 1: Tổng Quan (Dashboard) -->
+      <div id="dashOverview">
+        <div class="dash-header">
+          <span class="dash-eyebrow" id="dashEyebrow">// Bảng Điều Khiển</span>
+          <div class="dash-title" id="dashTitle">Quyền Truy Cập <span>Của Bạn</span></div>
+        </div>
+        <div id="roleCardsContainer" class="role-grid"></div>
+        <div class="divider"></div>
+        <div style="margin-bottom:16px;"><span class="sec-label">// Truy Cập Nhanh</span></div>
+        <div id="quickGrid" class="quick-grid"></div>
+      </div>
+
+      <!-- Section 2: Quản Lý Nhân Sự -->
+      <div id="employeeSection" style="display:none;">
+        <div class="dash-header" style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px;">
+          <div>
+            <span class="dash-eyebrow">// Dữ Liệu</span>
+            <div class="dash-title">Quản Lý <span>Nhân Viên</span></div>
+          </div>
+          <button class="btn-primary" style="width:auto; padding:12px 24px;" onclick="openEmpModal()"><i class='bx bx-plus'></i> Thêm Nhân Viên</button>
+        </div>
+        <div class="table-container">
+          <table class="emp-table">
+            <thead><tr><th>Mã NV</th><th>Họ Tên</th><th>Ngày Sinh</th><th>Phòng Ban</th><th>Chức Vụ</th><th>Email</th><th>SĐT</th><th>Thao Tác</th></tr></thead>
+            <tbody id="empTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Section 3: Quản Lý Phòng Ban -->
+      <div id="deptSection" style="display:none;">
+        <div class="dash-header" style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px;">
+          <div>
+            <span class="dash-eyebrow">// Cơ Cấu Tổ Chức</span>
+            <div class="dash-title">Quản Lý <span>Phòng Ban</span></div>
+          </div>
+          <button class="btn-primary" style="width:auto; padding:12px 24px;" onclick="openDeptModal()"><i class='bx bx-plus'></i> Thêm Phòng Ban</button>
+        </div>
+        <div class="table-container">
+          <table class="emp-table">
+            <thead><tr><th>Mã PB</th><th>Tên Phòng Ban</th><th>Trưởng Phòng</th><th>Mô Tả</th><th>Số NV</th><th>Thao Tác</th></tr></thead>
+            <tbody id="deptTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Section 4: Quản Lý Chức Vụ -->
+      <div id="posSection" style="display:none;">
+        <div class="dash-header" style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px;">
+          <div>
+            <span class="dash-eyebrow">// Phân Cấp</span>
+            <div class="dash-title">Quản Lý <span>Chức Vụ</span></div>
+          </div>
+          <button class="btn-primary" style="width:auto; padding:12px 24px;" onclick="openPosModal()"><i class='bx bx-plus'></i> Thêm Chức Vụ</button>
+        </div>
+        <div class="table-container">
+          <table class="emp-table">
+            <thead><tr><th>Mã CV</th><th>Tên Chức Vụ</th><th>Hệ Số Phụ Cấp</th><th>Mô Tả</th><th>Số NV</th><th>Thao Tác</th></tr></thead>
+            <tbody id="posTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Section 5: Hợp Đồng -->
+      <div id="contractSection" style="display:none;">
+        <div class="dash-header" style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px;">
+          <div>
+            <span class="dash-eyebrow">// Pháp Lý</span>
+            <div class="dash-title">Quản Lý <span>Hợp Đồng</span></div>
+          </div>
+          <button class="btn-primary" style="width:auto; padding:12px 24px;" onclick="openContractModal()"><i class='bx bx-plus'></i> Thêm Hợp Đồng</button>
+        </div>
+        <div class="table-container">
+          <table class="emp-table">
+            <thead><tr><th>Số HĐ</th><th>Nhân Viên</th><th>Loại HĐ</th><th>Ngày Ký</th><th>Ngày HH</th><th>Lương CB</th><th>Trạng Thái</th><th>Thao Tác</th></tr></thead>
+            <tbody id="contractTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Section 6: Bảng Lương -->
+      <div id="salarySection" style="display:none;">
+        <div class="dash-header" style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px;">
+          <div>
+            <span class="dash-eyebrow">// Tài Chính</span>
+            <div class="dash-title">Bảng <span>Lương</span></div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <select id="salaryMonthFilter" onchange="renderSalary()" style="padding:10px 14px;border-radius:8px;border:1.5px solid var(--border2);font-size:14px;background:var(--panel);color:var(--text);">
+              <option value="2025-01">Tháng 1/2025</option><option value="2025-02">Tháng 2/2025</option>
+              <option value="2025-03">Tháng 3/2025</option><option value="2025-04" selected>Tháng 4/2025</option>
+            </select>
+            <button class="btn-primary" style="width:auto; padding:12px 24px;" onclick="openSalaryModal()"><i class='bx bx-plus'></i> Thêm Bảng Lương</button>
+          </div>
+        </div>
+        <div class="table-container">
+          <table class="emp-table">
+            <thead><tr><th>Mã Lương</th><th>Nhân Viên</th><th>Tháng/Năm</th><th>Lương Thực Nhận</th><th>Thuế TNCN</th><th>Bảo Hiểm</th><th>Thao Tác</th></tr></thead>
+            <tbody id="salaryTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Section 7: Công Việc (Tasks) -->
+      <div id="taskSection" style="display:none;">
+        <div class="dash-header" style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px;">
+          <div>
+            <span class="dash-eyebrow">// Quản Lý Dự Án</span>
+            <div class="dash-title">Quản Lý <span>Công Việc</span></div>
+          </div>
+          <button class="btn-primary" style="width:auto; padding:12px 24px;" onclick="openTaskModal()"><i class='bx bx-plus'></i> Tạo Công Việc</button>
+        </div>
+        <div class="task-kanban" id="taskKanban"></div>
+      </div>
+
+      <!-- Section 8: Nghỉ Phép -->
+      <div id="leaveSection" style="display:none;">
+        <div class="dash-header" style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px;">
+          <div>
+            <span class="dash-eyebrow">// Nhân Sự</span>
+            <div class="dash-title">Quản Lý <span>Nghỉ Phép</span></div>
+          </div>
+          <button class="btn-primary" style="width:auto; padding:12px 24px;" onclick="openLeaveModal()"><i class='bx bx-plus'></i> Tạo Đơn Nghỉ Phép</button>
+        </div>
+        <div class="table-container">
+          <table class="emp-table">
+            <thead><tr><th>Mã Đơn</th><th>Nhân Viên</th><th>Loại Nghỉ</th><th>Từ Ngày</th><th>Đến Ngày</th><th>Lý Do</th><th>Trạng Thái</th><th>Thao Tác</th></tr></thead>
+            <tbody id="leaveTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Section 9: Chấm Công -->
+      <div id="attendanceSection" style="display:none;">
+        <div class="dash-header" style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px;">
+          <div>
+            <span class="dash-eyebrow">// Chấm Công</span>
+            <div class="dash-title">Quản Lý <span>Chấm Công</span></div>
+          </div>
+          <div style="display:flex;gap:10px;">
+            <button class="btn-primary" style="width:auto; padding:12px 24px; background:linear-gradient(135deg,#00A86B,#00C07B);" onclick="doCheckin()"><i class='bx bx-log-in-circle'></i> CHECK IN</button>
+            <button class="btn-primary" style="width:auto; padding:12px 24px; background:linear-gradient(135deg,#E05C00,#FF7A2E);" onclick="doCheckout()"><i class='bx bx-log-out-circle'></i> CHECK OUT</button>
+          </div>
+        </div>
+        <div id="attendanceToday" style="margin-bottom:20px;"></div>
+        <div class="table-container">
+          <table class="emp-table">
+            <thead><tr><th>Ngày</th><th>Nhân Viên</th><th>Check In</th><th>Check Out</th><th>Tổng Giờ</th><th>Trạng Thái</th></tr></thead>
+            <tbody id="attendanceTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Section 10: Báo Cáo & Thống Kê -->
+      <div id="reportSection" style="display:none;">
+        <div class="dash-header">
+          <span class="dash-eyebrow">// Phân Tích</span>
+          <div class="dash-title">Báo Cáo & <span>Thống Kê</span></div>
+        </div>
+        <div id="reportStats" class="report-stats-grid"></div>
+        <div id="reportCharts" style="margin-top:24px;"></div>
+      </div>
+
+      <!-- Section 11: Nhật Ký & Thông Báo -->
+      <div id="logSection" style="display:none;">
+        <div class="dash-header" style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px;">
+          <div>
+            <span class="dash-eyebrow">// Hệ Thống</span>
+            <div class="dash-title">Nhật Ký & <span>Thông Báo</span></div>
+          </div>
+          <button class="btn-primary" style="width:auto; padding:12px 24px;" onclick="openNotifyModal()"><i class='bx bx-bell'></i> Gửi Thông Báo</button>
+        </div>
+        <div id="notifyList" style="margin-bottom:24px;"></div>
+        <div class="table-container">
+          <table class="emp-table">
+            <thead><tr><th>Thời Gian</th><th>Người Dùng</th><th>Hành Động</th><th>Chi Tiết</th></tr></thead>
+            <tbody id="logTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Modal Nhân Viên -->
+<div id="empModal" class="modal-overlay">
+  <div class="modal-content" style="max-width:560px;">
+    <div class="modal-header">
+      <h3 id="empModalTitle">Thêm Nhân Viên Mới</h3>
+      <button class="close-btn" onclick="closeEmpModal()"><i class='bx bx-x'></i></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="empId">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="fgroup"><label>Họ Tên</label><input type="text" id="empName" placeholder="Nguyễn Văn A..."></div>
+        <div class="fgroup"><label>Ngày Sinh</label><input type="date" id="empDob"></div>
+        <div class="fgroup"><label>Giới Tính</label><select id="empGender"><option value="Nam">Nam</option><option value="Nữ">Nữ</option><option value="Khác">Khác</option></select></div>
+        <div class="fgroup"><label>Số ĐT</label><input type="text" id="empPhone" placeholder="0901234567"></div>
+        <div class="fgroup"><label>Email</label><input type="email" id="empEmail" placeholder="email@company.com"></div>
+        <div class="fgroup"><label>Địa Chỉ</label><input type="text" id="empAddress" placeholder="Địa chỉ..."></div>
+        <div class="fgroup"><label>Phòng Ban</label><select id="empDept"><option value="PB001">Công Nghệ Thông Tin</option><option value="PB002">Nhân Sự</option><option value="PB003">Marketing</option><option value="PB004">Kinh Doanh</option></select></div>
+        <div class="fgroup"><label>Chức Vụ</label><select id="empPos"><option value="CV001">Nhân Viên</option><option value="CV002">Trưởng Nhóm</option><option value="CV003">Trưởng Phòng</option><option value="CV004">Giám Đốc</option></select></div>
+        <div class="fgroup" style="grid-column:1/-1;"><label>Trạng Thái</label><select id="empStatus"><option value="active">Đang làm việc</option><option value="inactive">Đã nghỉ việc</option><option value="probation">Thử Việc</option></select></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeEmpModal()">Hủy</button>
+      <button class="btn-primary" style="width:auto;" onclick="saveEmployee()"><i class='bx bx-save'></i> Lưu</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Phòng Ban -->
+<div id="deptModal" class="modal-overlay">
+  <div class="modal-content" style="max-width:480px;">
+    <div class="modal-header">
+      <h3 id="deptModalTitle">Thêm Phòng Ban</h3>
+      <button class="close-btn" onclick="closeDeptModal()"><i class='bx bx-x'></i></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="deptId">
+      <div class="fgroup"><label>Tên Phòng Ban</label><input type="text" id="deptName" placeholder="VD: Phòng Kỹ Thuật..."></div>
+      <div class="fgroup"><label>Mã Trưởng Phòng</label><input type="text" id="deptHead" placeholder="VD: NV001"></div>
+      <div class="fgroup"><label>Mô Tả</label><textarea id="deptDesc" rows="3" style="width:100%;padding:11px 14px;border-radius:8px;border:1.5px solid var(--border2);font-family:Inter,sans-serif;font-size:14px;resize:vertical;color:var(--text);background:var(--panel);" placeholder="Mô tả phòng ban..."></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeDeptModal()">Hủy</button>
+      <button class="btn-primary" style="width:auto;" onclick="saveDept()"><i class='bx bx-save'></i> Lưu</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Chức Vụ -->
+<div id="posModal" class="modal-overlay">
+  <div class="modal-content" style="max-width:480px;">
+    <div class="modal-header">
+      <h3 id="posModalTitle">Thêm Chức Vụ</h3>
+      <button class="close-btn" onclick="closePosModal()"><i class='bx bx-x'></i></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="posId">
+      <div class="fgroup"><label>Tên Chức Vụ</label><input type="text" id="posName" placeholder="VD: Trưởng Phòng..."></div>
+      <div class="fgroup"><label>Hệ Số Phụ Cấp</label><input type="number" id="posCoeff" step="0.1" min="1" placeholder="VD: 1.5"></div>
+      <div class="fgroup"><label>Mô Tả</label><textarea id="posDesc" rows="3" style="width:100%;padding:11px 14px;border-radius:8px;border:1.5px solid var(--border2);font-family:Inter,sans-serif;font-size:14px;resize:vertical;color:var(--text);background:var(--panel);" placeholder="Mô tả chức vụ..."></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closePosModal()">Hủy</button>
+      <button class="btn-primary" style="width:auto;" onclick="savePos()"><i class='bx bx-save'></i> Lưu</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Hợp Đồng -->
+<div id="contractModal" class="modal-overlay">
+  <div class="modal-content" style="max-width:560px;">
+    <div class="modal-header">
+      <h3 id="contractModalTitle">Thêm Hợp Đồng</h3>
+      <button class="close-btn" onclick="closeContractModal()"><i class='bx bx-x'></i></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="contractId">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="fgroup"><label>Mã Nhân Viên</label><input type="text" id="contractEmp" placeholder="VD: NV001"></div>
+        <div class="fgroup"><label>Loại Hợp Đồng</label><select id="contractType"><option value="Chính thức">Chính Thức</option><option value="Thời vụ">Thời Vụ</option><option value="Thử việc">Thử Việc</option><option value="CTV">Cộng Tác Viên</option></select></div>
+        <div class="fgroup"><label>Ngày Ký</label><input type="date" id="contractStart"></div>
+        <div class="fgroup"><label>Ngày Hết Hạn</label><input type="date" id="contractEnd"></div>
+        <div class="fgroup"><label>Lương Cơ Bản (VNĐ)</label><input type="number" id="contractSalary" placeholder="VD: 15000000"></div>
+        <div class="fgroup"><label>Trạng Thái</label><select id="contractStatus"><option value="Còn hiệu lực">Còn Hiệu Lực</option><option value="Hết hạn">Hết Hạn</option><option value="Đã hủy">Đã Hủy</option></select></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeContractModal()">Hủy</button>
+      <button class="btn-primary" style="width:auto;" onclick="saveContract()"><i class='bx bx-save'></i> Lưu</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Bảng Lương -->
+<div id="salaryModal" class="modal-overlay">
+  <div class="modal-content" style="max-width:520px;">
+    <div class="modal-header">
+      <h3 id="salaryModalTitle">Thêm Bảng Lương</h3>
+      <button class="close-btn" onclick="closeSalaryModal()"><i class='bx bx-x'></i></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="salaryId">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="fgroup"><label>Mã Nhân Viên</label><input type="text" id="salaryEmp" placeholder="VD: NV001"></div>
+        <div class="fgroup"><label>Tháng/Năm</label><input type="month" id="salaryMonth"></div>
+        <div class="fgroup"><label>Lương Thực Nhận (VNĐ)</label><input type="number" id="salaryAmount" placeholder="VD: 18000000"></div>
+        <div class="fgroup"><label>Thuế TNCN (VNĐ)</label><input type="number" id="salaryTax" placeholder="VD: 1200000"></div>
+        <div class="fgroup" style="grid-column:1/-1;"><label>Bảo Hiểm (VNĐ)</label><input type="number" id="salaryInsurance" placeholder="VD: 800000"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeSalaryModal()">Hủy</button>
+      <button class="btn-primary" style="width:auto;" onclick="saveSalary()"><i class='bx bx-save'></i> Lưu</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Công Việc -->
+<div id="taskModal" class="modal-overlay">
+  <div class="modal-content" style="max-width:560px;">
+    <div class="modal-header">
+      <h3 id="taskModalTitle">Tạo Công Việc Mới</h3>
+      <button class="close-btn" onclick="closeTaskModal()"><i class='bx bx-x'></i></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="taskId">
+      <div class="fgroup"><label>Tên Công Việc</label><input type="text" id="taskName" placeholder="VD: Thiết kế UI Dashboard..."></div>
+      <div class="fgroup"><label>Mô Tả</label><textarea id="taskDesc" rows="3" style="width:100%;padding:11px 14px;border-radius:8px;border:1.5px solid var(--border2);font-family:Inter,sans-serif;font-size:14px;resize:vertical;color:var(--text);background:var(--panel);" placeholder="Mô tả chi tiết công việc..."></textarea></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="fgroup"><label>Ngày Bắt Đầu</label><input type="date" id="taskStart"></div>
+        <div class="fgroup"><label>Ngày Kết Thúc</label><input type="date" id="taskEnd"></div>
+        <div class="fgroup"><label>Mức Độ Ưu Tiên</label><select id="taskPriority"><option value="Thấp">Thấp</option><option value="Trung bình" selected>Trung Bình</option><option value="Cao">Cao</option><option value="Khẩn cấp">Khẩn Cấp</option></select></div>
+        <div class="fgroup"><label>Trạng Thái</label><select id="taskStatus"><option value="Chờ xử lý">Chờ Xử Lý</option><option value="Đang thực hiện">Đang Thực Hiện</option><option value="Hoàn thành">Hoàn Thành</option></select></div>
+        <div class="fgroup" style="grid-column:1/-1;"><label>Giao Cho (Mã NV)</label><input type="text" id="taskAssign" placeholder="VD: NV001, NV002"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeTaskModal()">Hủy</button>
+      <button class="btn-primary" style="width:auto;" onclick="saveTask()"><i class='bx bx-save'></i> Lưu</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Nghỉ Phép -->
+<div id="leaveModal" class="modal-overlay">
+  <div class="modal-content" style="max-width:520px;">
+    <div class="modal-header">
+      <h3 id="leaveModalTitle">Tạo Đơn Nghỉ Phép</h3>
+      <button class="close-btn" onclick="closeLeaveModal()"><i class='bx bx-x'></i></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="leaveId">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="fgroup"><label>Mã Nhân Viên</label><input type="text" id="leaveEmp" placeholder="VD: NV001"></div>
+        <div class="fgroup"><label>Loại Nghỉ</label><select id="leaveType"><option value="Nghỉ phép năm">Nghỉ Phép Năm</option><option value="Nghỉ ốm">Nghỉ Ốm</option><option value="Nghỉ thai sản">Nghỉ Thai Sản</option><option value="Nghỉ không lương">Nghỉ Không Lương</option></select></div>
+        <div class="fgroup"><label>Từ Ngày</label><input type="date" id="leaveFrom"></div>
+        <div class="fgroup"><label>Đến Ngày</label><input type="date" id="leaveTo"></div>
+        <div class="fgroup" style="grid-column:1/-1;"><label>Lý Do</label><textarea id="leaveReason" rows="3" style="width:100%;padding:11px 14px;border-radius:8px;border:1.5px solid var(--border2);font-family:Inter,sans-serif;font-size:14px;resize:vertical;color:var(--text);background:var(--panel);" placeholder="Lý do xin nghỉ..."></textarea></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeLeaveModal()">Hủy</button>
+      <button class="btn-primary" style="width:auto;" onclick="saveLeave()"><i class='bx bx-save'></i> Nộp Đơn</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Gửi Thông Báo -->
+<div id="notifyModal" class="modal-overlay">
+  <div class="modal-content" style="max-width:520px;">
+    <div class="modal-header">
+      <h3>Gửi Thông Báo Toàn Công Ty</h3>
+      <button class="close-btn" onclick="closeNotifyModal()"><i class='bx bx-x'></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="fgroup"><label>Tiêu Đề</label><input type="text" id="notifyTitle" placeholder="Tiêu đề thông báo..."></div>
+      <div class="fgroup"><label>Nội Dung</label><textarea id="notifyContent" rows="4" style="width:100%;padding:11px 14px;border-radius:8px;border:1.5px solid var(--border2);font-family:Inter,sans-serif;font-size:14px;resize:vertical;color:var(--text);background:var(--panel);" placeholder="Nội dung thông báo..."></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeNotifyModal()">Hủy</button>
+      <button class="btn-primary" style="width:auto;" onclick="sendNotify()"><i class='bx bx-send'></i> Gửi</button>
+    </div>
+  </div>
+</div>
+
+<script src="modules.js"></script>
+<script src="app.js"></script>
+
+<!-- DUMMY LINKS FOR BUNDLERS -->
+<div style="display:none;">
+  <a href="index.html" id="link-home">Home</a>
+  <a href="login.html" id="link-login">Login</a>
+  <a href="dashboard.html" id="link-dash">Dashboard</a>
+</div>
+
+</body>
+</html>
